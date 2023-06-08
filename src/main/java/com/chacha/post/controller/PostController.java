@@ -1,13 +1,16 @@
 package com.chacha.post.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.chacha.post.dto.PostCreate;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 public class PostController {
 
-    @GetMapping("/posts")
-    public String get() {
+    @PostMapping("/posts")
+    public String get(@RequestBody PostCreate params) {
+        log.info("params={}", params);
         return "Hello World";
     }
 }
