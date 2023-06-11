@@ -1,5 +1,6 @@
 package com.chacha.post.controller;
 
+import com.chacha.post.domain.Post;
 import com.chacha.post.dto.PostCreate;
 import com.chacha.post.service.PostService;
 import jakarta.validation.Valid;
@@ -19,9 +20,9 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public Map<String, String> get(@RequestBody @Valid PostCreate request) {
+    public void post(@RequestBody @Valid PostCreate request) {
         log.info("params={}", request);
         postService.write(request);
-        return Map.of();
+//        return Map.of("postId", postId);
     }
 }
