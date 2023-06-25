@@ -3,6 +3,7 @@ package com.chacha.post.service;
 import com.chacha.post.domain.Post;
 import com.chacha.post.dto.PostCreate;
 import com.chacha.post.repository.PostRepository;
+import com.chacha.post.response.PostResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,13 +55,13 @@ class PostServiceTest {
         postRepository.save(requestPost);
 
         // when
-        Post post = postService.get(requestPost.getId());
+        PostResponse postResponse = postService.get(requestPost.getId());
 
         // then
-        Assertions.assertNotNull(post);
+        Assertions.assertNotNull(postResponse);
         Assertions.assertEquals(1L, postRepository.count());
-        Assertions.assertEquals("foo", post.getTitle());
-        Assertions.assertEquals("bar", post.getContent());
+        Assertions.assertEquals("foo", postResponse.getTitle());
+        Assertions.assertEquals("bar", postResponse.getContent());
     }
 
 }

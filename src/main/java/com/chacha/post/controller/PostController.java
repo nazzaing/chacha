@@ -1,14 +1,12 @@
 package com.chacha.post.controller;
 
-import com.chacha.post.domain.Post;
 import com.chacha.post.dto.PostCreate;
+import com.chacha.post.response.PostResponse;
 import com.chacha.post.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -25,8 +23,8 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public Post get(@PathVariable(name = "postId") Long id) {
-        Post post = postService.get(id);
-        return post;
+    public PostResponse get(@PathVariable(name = "postId") Long id) {
+        PostResponse postResponse = postService.get(id);
+        return postResponse;
     }
 }
