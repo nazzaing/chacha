@@ -4,6 +4,7 @@ import com.chacha.post.domain.Post;
 import com.chacha.post.dto.PostCreate;
 import com.chacha.post.repository.PostRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,8 +15,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -127,6 +133,54 @@ class PostControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(post.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("1234567890"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("bar"))
+                .andDo(MockMvcResultHandlers.print());
+
+        // then
+    }
+
+    @Test
+    @DisplayName("글 여러개 조회")
+    void test5() throws Exception {
+        // given
+        /*Post post1 =  Post.builder()
+                .title("title1")
+                .content("content1")
+                .build();*/
+//        postRepository.save(post1);
+        /*postRepository.saveAll(List.of(
+                Post.builder()
+                        .title("title1")
+                        .content("content1")
+                        .build(),
+                Post.builder()
+                        .title("title2")
+                        .content("content2")
+                        .build()
+        ));*/
+        List<Post> requestPosts = IntStream.range(1, 31)
+                .mapToObj(i -> Post.builder()
+                        .title("boo 제목 - " + i)
+                        .content("boo 내용 - " + i)
+                        .build())
+                .collect(Collectors.toList());
+
+        postRepository.saveAll(requestPosts);
+
+        /*Post post2 =  Post.builder()
+                .title("title2")
+                .content("content2")
+                .build();
+        postRepository.save(post2);*/
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts?page=0&sort=id,desc&size=5")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()", Matchers.is(5)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("boo 제목 - 30"))
+                /*.andExpect(MockMvcResultMatchers.jsonPath("$[0].content").value("content1"))*/
+                .andExpect(MockMvcResultMatchers.jsonPath("$[4].title").value("boo 제목 - 26"))
+                /*.andExpect(MockMvcResultMatchers.jsonPath("$[1].content").value("content2"))*/
                 .andDo(MockMvcResultHandlers.print());
 
         // then
