@@ -173,10 +173,10 @@ class PostControllerTest {
         postRepository.save(post2);*/
 
         // when
-        mockMvc.perform(MockMvcRequestBuilders.get("/posts?page=0&sort=id,desc&size=5")
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts?page=0&sort=id,desc&size=10")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()", Matchers.is(5)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()", Matchers.is(10)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("boo 제목 - 30"))
                 /*.andExpect(MockMvcResultMatchers.jsonPath("$[0].content").value("content1"))*/
                 .andExpect(MockMvcResultMatchers.jsonPath("$[4].title").value("boo 제목 - 26"))

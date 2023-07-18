@@ -1,6 +1,7 @@
 package com.chacha.post.controller;
 
 import com.chacha.post.dto.PostCreate;
+import com.chacha.post.request.PostSearch;
 import com.chacha.post.response.PostResponse;
 import com.chacha.post.service.PostService;
 import jakarta.validation.Valid;
@@ -31,7 +32,7 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<PostResponse> getList(Pageable pageable) {
-        return postService.getList(pageable);
+    public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
+        return postService.getList(postSearch);
     }
 }

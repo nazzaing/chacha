@@ -3,6 +3,7 @@ package com.chacha.post.service;
 import com.chacha.post.domain.Post;
 import com.chacha.post.dto.PostCreate;
 import com.chacha.post.repository.PostRepository;
+import com.chacha.post.request.PostSearch;
 import com.chacha.post.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,9 +47,9 @@ public class PostService {
                 .build();
     }
 
-    public List<PostResponse> getList(Pageable pageable) {
+    public List<PostResponse> getList(PostSearch postSearch) {
         /*Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "id"));*/
-        return postRepository.findAll(pageable).stream()
+        return postRepository.getList(postSearch).stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
     }

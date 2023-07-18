@@ -3,6 +3,7 @@ package com.chacha.post.service;
 import com.chacha.post.domain.Post;
 import com.chacha.post.dto.PostCreate;
 import com.chacha.post.repository.PostRepository;
+import com.chacha.post.request.PostSearch;
 import com.chacha.post.response.PostResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -108,11 +109,15 @@ class PostServiceTest {
         /*Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));*/
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
 
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .build();
+
         // when
-        List<PostResponse> posts = postService.getList(pageable);
+        List<PostResponse> posts = postService.getList(postSearch);
 
         // then
-        Assertions.assertEquals(5L, posts.size());
+        Assertions.assertEquals(10L, posts.size());
         Assertions.assertEquals("boo 제목 - 30", posts.get(0).getTitle());
         Assertions.assertEquals("boo 제목 - 26", posts.get(4).getTitle());
     }
