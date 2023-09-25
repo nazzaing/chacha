@@ -1,6 +1,7 @@
 package com.chacha.post.controller;
 
 import com.chacha.post.dto.PostCreate;
+import com.chacha.post.request.PostEdit;
 import com.chacha.post.request.PostSearch;
 import com.chacha.post.response.PostResponse;
 import com.chacha.post.service.PostService;
@@ -34,5 +35,10 @@ public class PostController {
     @GetMapping("/posts")
     public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
         return postService.getList(postSearch);
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit postEdit) {
+        postService.edit(postId, postEdit);
     }
 }

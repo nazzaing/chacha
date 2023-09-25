@@ -3,6 +3,7 @@ package com.chacha.post.service;
 import com.chacha.post.domain.Post;
 import com.chacha.post.dto.PostCreate;
 import com.chacha.post.repository.PostRepository;
+import com.chacha.post.request.PostEdit;
 import com.chacha.post.request.PostSearch;
 import com.chacha.post.response.PostResponse;
 import org.junit.jupiter.api.Assertions;
@@ -120,6 +121,57 @@ class PostServiceTest {
         Assertions.assertEquals(10L, posts.size());
         Assertions.assertEquals("boo 제목 - 30", posts.get(0).getTitle());
         Assertions.assertEquals("boo 제목 - 26", posts.get(4).getTitle());
+    }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void test4() {
+
+        Post post = Post.builder()
+                .title("boo 제목")
+                .content("boo 내용")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("호호호호")
+                .content("boo 내용")
+                .build();
+
+        // when
+        postService.edit(post.getId(), postEdit);
+
+        // then
+        Post changePost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + post.getId()));
+        Assertions.assertEquals("호호호호", changePost.getTitle());
+        Assertions.assertEquals("boo 내용", changePost.getContent());
+    }
+
+    @Test
+    @DisplayName("글 내용 수정")
+    void test5() {
+
+        Post post = Post.builder()
+                .title("boo 제목")
+                .content("boo 내용")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("boo 제목")
+                .content("호호호호")
+                .build();
+
+        // when
+        postService.edit(post.getId(), postEdit);
+
+        // then
+        Post changePost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + post.getId()));
+        Assertions.assertEquals("호호호호", changePost.getContent());
     }
 
 }

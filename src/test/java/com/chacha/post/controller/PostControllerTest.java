@@ -3,6 +3,7 @@ package com.chacha.post.controller;
 import com.chacha.post.domain.Post;
 import com.chacha.post.dto.PostCreate;
 import com.chacha.post.repository.PostRepository;
+import com.chacha.post.request.PostEdit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -181,6 +182,32 @@ class PostControllerTest {
                 /*.andExpect(MockMvcResultMatchers.jsonPath("$[0].content").value("content1"))*/
                 .andExpect(MockMvcResultMatchers.jsonPath("$[4].title").value("boo 제목 - 26"))
                 /*.andExpect(MockMvcResultMatchers.jsonPath("$[1].content").value("content2"))*/
+                .andDo(MockMvcResultHandlers.print());
+
+        // then
+    }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void test6() throws Exception {
+        //given
+        Post post = Post.builder()
+                .title("boo 제목")
+                .content("boo 내용")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("호호호호")
+                .content("boo 내용")
+                .build();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.patch("/posts/{postId}", post.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEdit)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
 
         // then
