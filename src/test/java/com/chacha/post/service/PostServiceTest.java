@@ -2,6 +2,7 @@ package com.chacha.post.service;
 
 import com.chacha.post.domain.Post;
 import com.chacha.post.dto.PostCreate;
+import com.chacha.post.exception.PostNotFound;
 import com.chacha.post.repository.PostRepository;
 import com.chacha.post.request.PostEdit;
 import com.chacha.post.request.PostSearch;
@@ -192,4 +193,61 @@ class PostServiceTest {
         Assertions.assertEquals(0, postRepository.count());
     }
 
+    @Test
+    @DisplayName("글 1개 조회 - 존재하지 않는 글")
+    void test7() {
+        // given
+        Post post = Post.builder()
+                .title("foo")
+                .content("bar")
+                .build();
+        postRepository.save(post);
+
+        // exception
+        Assertions.assertThrows(PostNotFound.class, () -> {
+            postService.get(post.getId() + 1L);
+        });
+
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 - 존재하지 않는 글")
+    void test8() {
+        //given
+        Post post = Post.builder()
+                .title("boo 제목")
+                .content("boo 내용")
+                .build();
+
+        postRepository.save(post);
+
+        // expected
+        Assertions.assertThrows(PostNotFound.class, () -> {
+            postService.delete(post.getId() + 1L);
+        });
+
+    }
+
+    @Test
+    @DisplayName("글 내용 수정 - 존재하지 않는 글")
+    void test9() {
+
+        Post post = Post.builder()
+                .title("boo 제목")
+                .content("boo 내용")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("boo 제목")
+                .content("호호호호")
+                .build();
+
+        // expected
+        Assertions.assertThrows(PostNotFound.class, () -> {
+            postService.edit(post.getId() + 1L, postEdit);
+        });
+
+    }
 }
